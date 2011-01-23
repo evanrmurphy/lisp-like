@@ -59,7 +59,7 @@
   (if (atom exp)
        ; omit number case so all atoms are symbols
        (value exp env)
-      (is (car exp) 'lambda)
+      (is (car exp) 'fn)
        (list '&procedure (cadr exp) (caddr exp) env)
       (is (car exp) 'vau)
        (list '&fexpr (cadr exp) (caddr exp) env)
@@ -87,7 +87,7 @@
 ; (vau (x) x)       ; quote
 
 (mac ev-with-lib body
-  `(ev '((lambda (quote)
+  `(ev '((fn (quote)
            ,@body)
          (vau (x) x)
          ; not easy to can't add more args here since
