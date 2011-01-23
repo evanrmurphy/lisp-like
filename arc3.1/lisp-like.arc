@@ -100,7 +100,7 @@
        (ply fun (evlis args env))
       (is (car fun) '&fexpr)
        (ply fun args)
-       (err "in ev")))
+       (err "in evproc")))
 
 (def ply (fun args)
   (if ; primop case omitted
@@ -110,16 +110,22 @@
            (bind (cadr fun) args (cadddr fun)))
        (err "in ply")))
 
-;; lib
+;; core
 
-(mac ev-with-quote body
-  `(ev '((fn (quote)
+(mac ev-with-core body
+  `(ev '((fn (quote
+              Y ; see http://en.wikipedia.org/wiki/Fixed_point_combinator#Example_in_scheme
+             )
            ,@body)
-         (vau (x) x))
+         (vau (x) x)  ; quote
+         (fn (f)      ; Y
+           ((fn (recur) (f (fn args (apply (recur recur) args))))
+            (fn (recur) (f (fn args (apply (recur recur) args))))))
+         )
        nil))
 
 (mac ev-with-lib body
-  `(ev-with-quote
+  `(ev-with-core
      ((fn (nil
            t
            caar
@@ -127,8 +133,7 @@
            cddr
            no
            list 
-           ; Y ; see http://en.wikipedia.org/wiki/Fixed_point_combinator#Example_in_scheme
-           ; copylist
+           copylist
            )
         ,@body)
       'nil
@@ -138,13 +143,11 @@
       (fn (xs) (cdr (cdr xs))) ; cddr
       (fn (x) (eq x nil))      ; no
       (fn args args)           ; list
-      ; (fn (f)                ; Y
-      ;   ((fn (recur) (f (fn args (apply (recur recur) args))))
-      ;    (fn (recur) (f (fn args (apply (recur recur) args))))))
-      ; (fn (xs)               ; copylist
-      ;   (if (no xs)
-      ;        nil
-      ;        (cons (car xs) (copylist (cdr xs)))))
+      ((Y (fn (f)              ; copylist
+            (fn (xs)           
+              (if (no xs)
+                  nil
+                  (cons (car xs) (f (cdr xs))))))))
       )))
 
 ; alias for convenience
