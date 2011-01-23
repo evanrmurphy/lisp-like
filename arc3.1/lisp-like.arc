@@ -16,14 +16,14 @@
 (def bind (vars args env)
        (if (is (len vars) (len args))
             (cons (cons vars args) env)
-            (err "")))
+            (err "in bind")))
 
 (def value (name env)
        (value1 name (lookup name env)))
 
 (def value1 (name slot)
        (if (is slot '&unbound)
-            (err "")
+            (err "in value1")
             (car slot)))
 
 (def lookup (name env)
@@ -42,7 +42,7 @@
 
 (def evcond (clauses env)
   (if (no clauses)
-       (err "")
+       (err "in evcond")
       (ev (caar clauses) env)
        (ev (cadar clauses) env)
        (evcond (cdr clauses) env)))
@@ -70,7 +70,7 @@
               (ply fun (evlis (cdr exp) env))
              (is (car fun) '&fexpr)
               (ply fun (cdr exp))
-              (err "")))))
+              (err "in ev")))))
 
 (def ply (fun args)
   (if ; primop case omitted
@@ -78,17 +78,17 @@
           (is (car fun) '&fexpr))
        (ev (caddr fun)
            (bind (cadr fun) args (cadddr fun)))
-       (err "")))
+       (err "in ply")))
 
 ;; lib
 
-; quote
-(vau (x) x)
+; (vau (x) x)       ; quote
 
-;; template
-
-(ev '((lambda (quote)
-        ; program goes here
-      )
-      (vau (x) x))
-    nil)
+(mac ev-with-lib body
+  `(ev '((lambda (quote)
+           ,@body)
+         (vau (x) x)
+         ; not easy to can't add more args here since
+         ; quote not yet defined
+         )
+       nil))
