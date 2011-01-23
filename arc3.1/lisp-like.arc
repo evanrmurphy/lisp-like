@@ -125,14 +125,19 @@
            caar
            cadr
            cddr
-           no)
+           no
+           copylist)
         ,@body)
       'nil
       't
       (fn (xs) (car (car xs)))
       (fn (xs) (car (cdr xs)))
       (fn (xs) (cdr (cdr xs)))
-      (fn (x) (eq x nil)))))
+      (fn (x) (eq x nil))
+      (fn (xs)
+        (if (no xs)
+             nil
+             (cons (car xs) (copylist (cdr xs))))))))
 
 ; alias for convenience
 
