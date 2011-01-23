@@ -123,12 +123,14 @@
      ((fn (nil
            caar
            cadr
-           cddr)
+           cddr
+           no)
         ,@body)
       'nil
       (fn (xs) (car (car xs)))
       (fn (xs) (car (cdr xs)))
-      (fn (xs) (cdr (cdr xs))))))
+      (fn (xs) (cdr (cdr xs)))
+      (fn (x) (eq x nil)))))
 
 ; alias for convenience
 
