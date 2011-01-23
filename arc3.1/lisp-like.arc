@@ -60,7 +60,7 @@
 
 (def eveq (x y env)
   (if (is (ev x env) (ev y env))
-       (ev x env) ; return the match instead of 't
+       t
        nil))
 
 ; evatom
@@ -121,12 +121,14 @@
 (mac ev-with-lib body
   `(ev-with-quote
      ((fn (nil
+           t
            caar
            cadr
            cddr
            no)
         ,@body)
       'nil
+      't
       (fn (xs) (car (car xs)))
       (fn (xs) (car (cdr xs)))
       (fn (xs) (cdr (cdr xs)))
@@ -135,7 +137,3 @@
 ; alias for convenience
 
 (= e ev-with-lib)
-
-; (def caar (xs) (car (car xs)))
-; (def cadr (xs) (car (cdr xs)))
-; (def cddr (xs) (cdr (cdr xs)))
