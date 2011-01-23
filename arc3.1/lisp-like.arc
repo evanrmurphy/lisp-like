@@ -79,6 +79,12 @@
        (evif (cdr exp) env)
       (is (car exp) 'eq)
        (eveq (cadr exp) (caddr exp) env)
+      (is (car exp) 'car)
+       (car (ev (cadr exp) env))
+      (is (car exp) 'cdr)
+       (cdr (ev (cadr exp) env))
+      (is (car exp) 'cons)
+       (cons (ev (cadr exp) env) (ev (caddr exp) env))
        (evproc (ev (car exp) env) (cdr exp) env)))
 
 (def evproc (fun args env)
