@@ -126,7 +126,9 @@
            cadr
            cddr
            no
-           copylist)
+           Y ; see http://en.wikipedia.org/wiki/Fixed_point_combinator#Example_in_scheme
+           ; copylist
+           )
         ,@body)
       'nil
       't
@@ -134,10 +136,14 @@
       (fn (xs) (car (cdr xs)))
       (fn (xs) (cdr (cdr xs)))
       (fn (x) (eq x nil))
-      (fn (xs)
-        (if (no xs)
-             nil
-             (cons (car xs) (copylist (cdr xs))))))))
+      (fn (f)
+        ((fn (recur) (f (fn args (apply (recur recur) args))))
+         (fn (recur) (f (fn args (apply (recur recur) args))))))
+      ; (fn (xs)
+      ;   (if (no xs)
+      ;        nil
+      ;        (cons (car xs) (copylist (cdr xs)))))
+      )))
 
 ; alias for convenience
 
