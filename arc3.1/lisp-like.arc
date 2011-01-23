@@ -114,13 +114,9 @@
 
 (mac ev-with-core body
   `(ev '((fn (quote
-              Y ; see http://en.wikipedia.org/wiki/Fixed_point_combinator#Example_in_scheme
              )
            ,@body)
          (vau (x) x)  ; quote
-         (fn (f)      ; Y
-           ((fn (recur) (f (fn args (apply (recur recur) args))))
-            (fn (recur) (f (fn args (apply (recur recur) args))))))
          )
        nil))
 
@@ -133,7 +129,7 @@
            cddr
            no
            list 
-           copylist
+           ; copylist
            )
         ,@body)
       'nil
@@ -143,11 +139,10 @@
       (fn (xs) (cdr (cdr xs))) ; cddr
       (fn (x) (eq x nil))      ; no
       (fn args args)           ; list
-      ((Y (fn (f)              ; copylist
-            (fn (xs)           
-              (if (no xs)
-                  nil
-                  (cons (car xs) (f (cdr xs))))))))
+      ;   (fn (xs)             ; copylist
+      ;     (if (no xs)
+      ;          nil
+      ;          (cons (car xs) (copylist (cdr xs))))))
       )))
 
 ; alias for convenience
