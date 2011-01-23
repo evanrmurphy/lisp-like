@@ -71,6 +71,11 @@
   (if (atom (ev x env)) (ev x env)
                         nil))
 
+; evassign
+
+(def evassign (var val env)
+  (ev val (bind var val env)))
+
 ; ev (eval) and ply (apply)
 
 (def ev-case-atom (exp env)
@@ -89,7 +94,7 @@
     cdr    (cdr (ev (cadr exp) env))
     cons   (cons (ev (cadr exp) env) (ev (caddr exp) env))
     atom   (evatom (cadr exp) env)
-    assign (ev (caddr exp) (bind (cadr exp) (ev (caddr exp) env) env))
+    assign (evassign (cadr exp) (caddr exp) env)
            (evproc (ev (car exp) env) (cdr exp) env)))
 
 (def ev (exp env)
