@@ -59,8 +59,8 @@
   (if (atom exp)
        ; omitted number case, numbers are just symbols!
        (value exp env)
-      (is (car exp) 'quote)
-       (cadr exp)
+      ; (is (car exp) 'quote)
+      ;  (cadr exp)
       (is (car exp) 'lambda)
        (list '&procedure (cadr exp) (caddr exp) env)
       (is (car exp) 'vau)
@@ -81,3 +81,8 @@
        (ev (caddr fun)
            (bind (cadr fun) args (cadddr fun)))
        (err "")))
+
+;; lib
+
+; quote
+(vau (x) x)
