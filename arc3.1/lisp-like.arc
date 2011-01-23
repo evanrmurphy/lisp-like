@@ -49,7 +49,7 @@
 
 (def evlis (arglist env)
   (if (no arglist)
-         '()
+         '() ; arc will turn to nil at read-time
          (cons (ev (car arglist) env)
                (evlis (cdr arglist) env))))
 
