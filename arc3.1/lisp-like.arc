@@ -38,7 +38,7 @@
        vals
        (lookup1 name (cdr vars) (cdr vals) env)))
 
-; evcond and evlis (not tested)
+; evif and evlis (not tested)
 
 (def evif (clauses env)
   (if (no clauses)
@@ -49,11 +49,19 @@
        (ev (cadr clauses) env)
        (evif (cddr clauses) env)))
 
+; don't like name
 (def evlis (arglist env)
   (if (no arglist)
        '() ; arc will turn to nil at read-time
        (cons (ev (car arglist) env)
              (evlis (cdr arglist) env))))
+
+; eveq
+
+(def eveq (x y env)
+  (if (is (ev x env) (ev y env))
+       (ev x env) ; return the match instead of 't
+       nil))
 
 ; ev (eval) and ply (apply)
 
@@ -69,6 +77,8 @@
        (ev (ev (cadr exp) env) env)
       (is (car exp) 'if)
        (evif (cdr exp) env)
+      (is (car exp) 'eq)
+       (eveq (cadr exp) (caddr exp) env)
        (evproc (ev (car exp) env) (cdr exp) env)))
 
 (def evproc (fun args env)
@@ -101,3 +111,7 @@
      ((fn (nil)
         ,@body)
       'nil)))
+
+; alias for convenience
+
+(= e ev-with-lib)
