@@ -1,8 +1,13 @@
-; utils
+;; utils
 
 (def cdar (xs) (cdr (car xs)))
+(def cadar (xs) (car (cdr (car xs))))
+(def caddr (xs) (car (cdr (cdr xs))))
+(def cadddr (xs) (car (cdr (cdr (cdr xs)))))
 
-; main
+;; main
+
+; bind and value
 
 (def bind (vars args env)
        (if (is (len vars) (len args))
@@ -28,3 +33,39 @@
       (is name (car vars))
        vals
        (lookup1 name (cdr vars) (cdr vals) env)))
+
+; evcond and evlis (not tested)
+
+(def evcond (clauses env)
+  (if (no clauses)
+       (err "")
+      (ev (caar clauses) env)
+       (ev (cadar clauses) env)
+       (evcond (cdr clauses) env)))
+
+(def evlis (arglist env)
+  (if (no arglist)
+         '()
+         (cons (ev (car arglist) env)
+               (evlis (cdr arglist) env))))
+
+; ev (eval) and ply (apply)
+
+(def ev (exp env)
+  (if (atom exp)
+       (value exp env)
+      (is (car exp) 'quote)
+       (cadr exp)
+      (is (car exp) 'lambda)
+       (list '&procedure (cadr exp) (caddr exp) env)
+      (is (car exp) 'cond)
+       (evcond (cdr exp) env)
+       (ply (ev (car exp) env)
+            (evlis (cdr exp) env))))
+
+(def ply (fun args)
+       (if ; primop case omitted
+           (is (car fun) '&procedure)
+            (ev (caddr fun)
+                (bind (cadr fun) args (cadddr fun)))
+            (err "")))
