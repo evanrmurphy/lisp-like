@@ -47,11 +47,18 @@
        (ev (cadar clauses) env)
        (evcond (cdr clauses) env)))
 
+(def evif (clauses env)
+  (if (no clauses)
+       (err "in evcond")
+      (ev (car clauses) env)
+       (ev (cadr clauses) env)
+       (evcond (cddr clauses) env)))
+
 (def evlis (arglist env)
   (if (no arglist)
-         '() ; arc will turn to nil at read-time
-         (cons (ev (car arglist) env)
-               (evlis (cdr arglist) env))))
+       '() ; arc will turn to nil at read-time
+       (cons (ev (car arglist) env)
+             (evlis (cdr arglist) env))))
 
 ; ev (eval) and ply (apply)
 
@@ -65,8 +72,8 @@
        (list '&fexpr (cadr exp) (caddr exp) env)
       (is (car exp) 'eval)
        (ev (ev (cadr exp) env) env)
-      (is (car exp) 'cond)
-       (evcond (cdr exp) env)
+      (is (car exp) 'if)
+       (evif (cdr exp) env)
        (evproc (ev (car exp) env) (cdr exp) env)))
 
 (def evproc (fun args env)
