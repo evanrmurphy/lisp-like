@@ -59,8 +59,6 @@
   (if (atom exp)
        ; omitted number case, numbers are just symbols!
        (value exp env)
-      ; (is (car exp) 'quote)
-      ;  (cadr exp)
       (is (car exp) 'lambda)
        (list '&procedure (cadr exp) (caddr exp) env)
       (is (car exp) 'vau)
@@ -86,3 +84,11 @@
 
 ; quote
 (vau (x) x)
+
+;; template
+
+(ev '((lambda (quote)
+        ; program goes here
+      )
+      (vau (x) x))
+    nil)
