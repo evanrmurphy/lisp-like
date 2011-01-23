@@ -57,7 +57,7 @@
 
 (def ev (exp env)
   (if (atom exp)
-       ; omitted number case, numbers are just symbols!
+       ; omit number case so all atoms are symbols
        (value exp env)
       (is (car exp) 'lambda)
        (list '&procedure (cadr exp) (caddr exp) env)
