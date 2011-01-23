@@ -23,7 +23,7 @@
 
 (def value1 (name slot)
        (if (is slot '&unbound)
-            (err "in value1")
+            nil
             (car slot)))
 
 (def lookup (name env)
