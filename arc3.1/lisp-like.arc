@@ -67,12 +67,14 @@
        (ev (ev (cadr exp) env) env)
       (is (car exp) 'cond)
        (evcond (cdr exp) env)
-       (let fun (ev (car exp) env)
-         (if (is (car fun) '&procedure)
-              (ply fun (evlis (cdr exp) env))
-             (is (car fun) '&fexpr)
-              (ply fun (cdr exp))
-              (err "in ev")))))
+       (evproc (ev (car exp) env) (cdr exp) env)))
+
+(def evproc (fun args env)
+  (if (is (car fun) '&procedure)
+       (ply fun (evlis args env))
+      (is (car fun) '&fexpr)
+       (ply fun args)
+       (err "in ev")))
 
 (def ply (fun args)
   (if ; primop case omitted
