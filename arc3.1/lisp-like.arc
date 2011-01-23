@@ -1,3 +1,7 @@
+;;; Simple lisp-like interpreter, modeled after
+;;; Figure 7 in The Art of the Interpreter
+;;; (http://www.scribd.com/doc/2416804/Lisp-Art-of-the-interpreter-sussman) 
+
 ;; utils
 
 (def cdar (xs) (cdr (car xs)))
@@ -53,6 +57,7 @@
 
 (def ev (exp env)
   (if (atom exp)
+       ; omitted number case, numbers are just symbols!
        (value exp env)
       (is (car exp) 'quote)
        (cadr exp)
