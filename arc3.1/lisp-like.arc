@@ -66,11 +66,15 @@
 ; evatom
 
 (def evatom (x env)
-  (if (atom (ev x env))
-       (ev x env)
-       nil))
+  (if (atom (ev x env)) (ev x env)
+                        nil))
 
 ; ev (eval) and ply (apply)
+
+(def ev (exp env)
+  (if (atom exp) (ev-case-atom exp env)
+                 (ev-case-cons exp env)))
+
 
 (def ev-case-atom (exp env)
   ; omit number case so all atoms are symbols
@@ -88,10 +92,6 @@
     cons (cons (ev (cadr exp) env) (ev (caddr exp) env))
     atom (evatom (cadr exp) env)
          (evproc (ev (car exp) env) (cdr exp) env)))
-
-(def ev (exp env)
-  (if (atom exp) (ev-case-atom exp env)
-                 (ev-case-cons exp env)))
 
 (def evproc (fun args env)
   (if (is (car fun) '&procedure)
@@ -120,10 +120,20 @@
 
 (mac ev-with-lib body
   `(ev-with-quote
-     ((fn (nil)
+     ((fn (nil
+           caar
+           cadr
+           cddr)
         ,@body)
-      'nil)))
+      'nil
+      (fn (xs) (car (car xs)))
+      (fn (xs) (car (cdr xs)))
+      (fn (xs) (cdr (cdr xs))))))
 
 ; alias for convenience
 
 (= e ev-with-lib)
+
+; (def caar (xs) (car (car xs)))
+; (def cadr (xs) (car (cdr xs)))
+; (def cddr (xs) (cdr (cdr xs)))
