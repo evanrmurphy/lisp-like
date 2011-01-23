@@ -63,6 +63,8 @@
        (list '&procedure (cadr exp) (caddr exp) env)
       (is (car exp) 'vau)
        (list '&fexpr (cadr exp) (caddr exp) env)
+      (is (car exp) 'eval)
+       (ev (cadr exp) env)
       (is (car exp) 'cond)
        (evcond (cdr exp) env)
        (let fun (ev (car exp) env)
