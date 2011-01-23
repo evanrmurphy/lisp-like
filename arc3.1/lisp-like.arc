@@ -125,6 +125,7 @@
            cadr
            cddr
            no
+           list 
            ; Y ; see http://en.wikipedia.org/wiki/Fixed_point_combinator#Example_in_scheme
            ; copylist
            )
@@ -135,6 +136,7 @@
       (fn (xs) (car (cdr xs))) ; cadr
       (fn (xs) (cdr (cdr xs))) ; cddr
       (fn (x) (eq x nil))      ; no
+      (fn args args)           ; list
       ; (fn (f)                ; Y
       ;   ((fn (recur) (f (fn args (apply (recur recur) args))))
       ;    (fn (recur) (f (fn args (apply (recur recur) args))))))
