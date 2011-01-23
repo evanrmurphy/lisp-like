@@ -40,19 +40,14 @@
 
 ; evcond and evlis (not tested)
 
-(def evcond (clauses env)
-  (if (no clauses)
-       (err "in evcond")
-      (ev (caar clauses) env)
-       (ev (cadar clauses) env)
-       (evcond (cdr clauses) env)))
-
 (def evif (clauses env)
   (if (no clauses)
-       (err "in evcond")
+       nil
+      (no (cdr clauses))
+       (ev (car clauses) env)
       (ev (car clauses) env)
        (ev (cadr clauses) env)
-       (evcond (cddr clauses) env)))
+       (evif (cddr clauses) env)))
 
 (def evlis (arglist env)
   (if (no arglist)
@@ -95,11 +90,14 @@
 
 ; (vau (x) x)       ; quote
 
-(mac ev-with-lib body
+(mac ev-with-quote body
   `(ev '((fn (quote)
            ,@body)
-         (vau (x) x)
-         ; not easy to can't add more args here since
-         ; quote not yet defined
-         )
+         (vau (x) x))
        nil))
+
+(mac ev-with-lib body
+  `(ev-with-quote
+     ((fn (nil)
+        ,@body)
+      'nil)))
